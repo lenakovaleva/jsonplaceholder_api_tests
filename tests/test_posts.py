@@ -1,5 +1,6 @@
 import pytest
 import requests
+import allure
 from config.base_test import BaseTest
 from config.headers import Headers
 from services.posts.endpoints import Endpoints
@@ -12,6 +13,7 @@ from utils.helper import Helper
 helper = Helper()
 header = Headers()
 
+@allure.feature("Posts")
 class TestPosts(BaseTest):
     
 
@@ -21,6 +23,7 @@ class TestPosts(BaseTest):
             pytest.param('/posts', 200, marks=pytest.mark.smoke),
         ]
     )
+    @allure.title("Проверить получение всех постов")
     def test_get_all_posts(self, endp, status_code):
         response = requests.get(
             url=urljoin(Endpoints.HOST, endp)
@@ -41,6 +44,7 @@ class TestPosts(BaseTest):
             pytest.param('/posts/k', 404, marks=pytest.mark.extended),
         ]
     )
+    @allure.title("Проверить получение поста по id")
     def test_get_post_by_id(self, endp, status_code, request):
         response = requests.get(
             url=urljoin(Endpoints.HOST, endp)
@@ -66,6 +70,7 @@ class TestPosts(BaseTest):
             pytest.param('/posts', Payloads.empty(), 201, None, None, marks=pytest.mark.extended),
         ]
     )
+    @allure.title("Проверить создание нового поста")
     def test_create_new_post(self, endp1, payload, status_code1, endp2, status_code2, request):
         response = requests.post(
             url=urljoin(Endpoints.HOST, endp1),
@@ -101,6 +106,7 @@ class TestPosts(BaseTest):
             pytest.param('/posts/2', Payloads.empty(), 200, None, None, marks=pytest.mark.extended),
         ]
     )
+    @allure.title("Проверить обновление поста (метод PUT)")
     def test_update_post(self, endp1, payload, status_code1, endp2, status_code2, request):
         response = requests.put(
             url=urljoin(Endpoints.HOST, endp1),
@@ -139,6 +145,7 @@ class TestPosts(BaseTest):
             pytest.param('/posts/2', Payloads.empty(), 200, None, None, marks=pytest.mark.extended),
         ]
     )
+    @allure.title("Проверить обновление поста (метод PATCH)")
     def test_patch_post(self, endp1, payload, status_code1, endp2, status_code2, request):
         response = requests.patch(
             url=urljoin(Endpoints.HOST, endp1),
@@ -172,6 +179,7 @@ class TestPosts(BaseTest):
             pytest.param('/posts/3', 200, '/posts/3', 404, marks=pytest.mark.crit_path),
         ]
     )
+    @allure.title("Проверить удаление поста")
     def test_delete_post(self, endp1, status_code1, endp2, status_code2, request):
         response = requests.delete(
             url=urljoin(Endpoints.HOST, endp1)
